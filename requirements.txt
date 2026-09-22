@@ -1,0 +1,2 @@
+# No external dependencies.
+# sqlite3 and the other modules used by this project are part of Python's standard library.
