@@ -2,7 +2,6 @@ import sqlite3
 
 DATABASE_NAME = "makerspace.db"
 
-
 def get_connection():
     """Create and return a connection to the SQLite database."""
     connection = sqlite3.connect(DATABASE_NAME)

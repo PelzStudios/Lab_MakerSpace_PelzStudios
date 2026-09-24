@@ -14,6 +14,8 @@ from services import (
     report_overdue_loans,
     report_equipment_by_category,
     report_member_loan_history,
+    validate_email,
+    validate_phone,
 )
 
 
@@ -32,6 +34,30 @@ def pause():
     input("\nPress Enter to continue...")
 
 
+def get_email(prompt="Email: "):
+    """Keep asking until the user enters a valid email."""
+    while True:
+        value = input(prompt).strip()
+
+        try:
+            validate_email(value)
+            return value
+        except ValueError as error:
+            print(f"Error: {error}")
+
+
+def get_phone(prompt="Phone: "):
+    """Keep asking until the user enters a valid phone number."""
+    while True:
+        value = input(prompt).strip()
+
+        try:
+            validate_phone(value)
+            return value
+        except ValueError as error:
+            print(f"Error: {error}")
+
+
 def member_menu():
     while True:
         print("\n--- MEMBERS ---")
@@ -44,8 +70,8 @@ def member_menu():
 
         if choice == "1":
             name = input("Name: ").strip()
-            email = input("Email: ").strip()
-            phone = input("Phone: ").strip()
+            email = get_email()
+            phone = get_phone()
 
             try:
                 member_id = register_member(name, email, phone)
@@ -61,8 +87,8 @@ def member_menu():
         elif choice == "3":
             member_id = get_int("Member ID: ")
             name = input("New name: ").strip()
-            email = input("New email: ").strip()
-            phone = input("New phone: ").strip()
+            email = get_email("New email: ")
+            phone = get_phone("New phone: ")
 
             try:
                 if update_member(member_id, name, email, phone):

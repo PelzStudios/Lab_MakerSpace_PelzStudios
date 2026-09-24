@@ -16,14 +16,51 @@ def validate_date(date_text):
         raise ValueError("Date must use YYYY-MM-DD format.")
 
 
+def validate_email(email):
+    validate_text(email, "Email")
+
+    if email.count("@") != 1:
+        raise ValueError("Email must contain exactly one @ symbol.")
+
+    local, domain = email.split("@")
+
+    if not local:
+        raise ValueError("Email must have text before the @ symbol.")
+
+    if "." not in domain:
+        raise ValueError(
+            "Email domain must contain a dot, e.g. name@example.com."
+        )
+
+
+def validate_phone(phone):
+    validate_text(phone, "Phone")
+
+    cleaned = (
+        phone.replace(" ", "")
+        .replace("-", "")
+        .replace("(", "")
+        .replace(")", "")
+    )
+
+    if not cleaned.isdigit():
+        raise ValueError(
+            "Phone number may only contain digits, spaces, dashes "
+            "and parentheses."
+        )
+
+    if len(cleaned) < 7:
+        raise ValueError("Phone number must contain at least 7 digits.")
+
+
 # -------------------------
 # MEMBER OPERATIONS
 # -------------------------
 
 def register_member(name, email, phone):
     validate_text(name, "Name")
-    validate_text(email, "Email")
-    validate_text(phone, "Phone")
+    validate_email(email)
+    validate_phone(phone)
 
     existing = fetch_one(
         "SELECT member_id FROM members WHERE email = ?",
@@ -63,8 +100,8 @@ def list_members():
 
 def update_member(member_id, name, email, phone):
     validate_text(name, "Name")
-    validate_text(email, "Email")
-    validate_text(phone, "Phone")
+    validate_email(email)
+    validate_phone(phone)
 
     existing = fetch_one(
         "SELECT member_id FROM members WHERE member_id = ?",
